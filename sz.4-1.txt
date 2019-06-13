@@ -1,0 +1,75 @@
+4-1
+假设要在足够多的会场里安排一批活动，并希望使用尽可能少的会场。设计一个有效的贪心算法进行安排。(这个问题实际上是著名的图着色问题。若将每一个活动作为图的一个 顶点，不相容活动间用边相连。使相邻顶点着有不同颜色的最小着色数，相应于要找的最小 会场数。)
+
+对于给定的 k 个待安排的活动，编程计算使用最少会场的时间表。
+
+数据输入： 
+第一行有 1 个正整数 k，表示有 k 个待安排的活动。接下来的 k 行中，每行有 2 个正整数，分别表示 k 个待安排的活动开始时间和结束时间。时间以 0 点开始的分钟计。
+
+import java.util.*;
+
+public class HuiChangAnPai {
+
+    private static class Point implements Comparable{
+        int time;
+        boolean isStartTime;
+
+        public int compareTo(Object o) {
+            Point point=(Point) o;
+            int result = Integer.compare(time, point.time);//按 time 由小到大 排列
+            return result;
+        }
+    }
+
+    private static int n;
+    private static List<Point> acts = new ArrayList<>();
+
+    public static void main(String[] args){
+        Scanner input = new Scanner(System.in);
+
+        while (true){
+            acts.clear();
+            n = input.nextInt();
+
+            for(int i=1; i<2*n; i+=2){
+                Point p = new Point();
+                Point q = new Point();
+                p.time = input.nextInt();
+                q.time = input.nextInt();
+                p.isStartTime = true;
+                q.isStartTime = false;
+                acts.add(p);
+                acts.add(q);
+
+            }
+
+            Collections.sort(acts);
+            int result = greedy();
+            System.out.println(result);
+        }
+    }
+
+    private static int greedy(){
+        int curr = 0;
+        int sum = 0;
+
+        int m = acts.size();
+        for(int i=0; i<m-1; i++){
+            if(acts.get(i).isStartTime)
+                curr++;
+            else
+                curr--;
+
+            if((i==m-2||(acts.get(i).time<acts.get(i+1).time)) && curr>sum)
+                sum = curr;
+        }
+
+        return sum;
+    }
+}
+
+
+
+
+
+
